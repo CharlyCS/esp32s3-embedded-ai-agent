@@ -1,0 +1,16 @@
+idf_component_register(
+    SRCS
+        "local_mcp_client.c"
+        "agent/agent_decision.c"
+        "agent/agent_openai.c"
+        "agent/agent_rule_engine.c"
+        "agent/agent_runtime.c"
+    INCLUDE_DIRS
+        "include"
+        "agent/include"
+    REQUIRES
+        aws
+        json
+        mcp-server
+        openai
+)

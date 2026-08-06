@@ -1,0 +1,130 @@
+menu "Embedded AI Agent configuration"
+
+    menu "Wi-Fi"
+
+        config APP_WIFI_SSID
+            string "Wi-Fi SSID"
+            default "CAMBIAR_WIFI"
+
+        config APP_WIFI_PASSWORD
+            string "Wi-Fi password"
+            default "CAMBIAR_PASSWORD"
+
+        config APP_WIFI_MAXIMUM_RETRY
+            int "Maximum Wi-Fi reconnection attempts"
+            range 1 100
+            default 20
+
+    endmenu
+
+    menu "AWS IoT Core - one Thing"
+
+        config APP_AWS_IOT_ENDPOINT
+            string "AWS IoT Device data endpoint, without mqtts://"
+            default "CAMBIAR-ats.iot.us-east-1.amazonaws.com"
+
+        config APP_THING_NAME
+            string "AWS IoT ThingName and MQTT Client ID"
+            default "CAMBIAR_THING_NAME"
+
+        config APP_AWS_MAX_TASK_BYTES
+            int "Maximum task JSON bytes"
+            range 512 16384
+            default 4096
+
+        config APP_AWS_MQTT_BUFFER_BYTES
+            int "MQTT input/output buffer bytes"
+            range 2048 16384
+            default 8192
+
+        config APP_AWS_TASK_QUEUE_LENGTH
+            int "AWS transport task queue length"
+            range 1 16
+            default 4
+
+    endmenu
+
+    menu "Local AI agent"
+
+        config APP_AGENT_USE_OPENAI
+            bool "Use OpenAI for local agent decisions"
+            default n
+            help
+                When enabled, the ESP32 sends the goal and tools/list result
+                to the configured model. The API key is embedded in the
+                firmware in this pilot implementation.
+
+        config APP_AGENT_OPENAI_API_KEY
+            string "OpenAI API key"
+            default "CAMBIAR_OPENAI_API_KEY"
+            depends on APP_AGENT_USE_OPENAI
+
+        config APP_AGENT_OPENAI_MODEL
+            string "OpenAI model"
+            default "gpt-4o-mini"
+            depends on APP_AGENT_USE_OPENAI
+
+        config APP_AGENT_OPENAI_FINAL_SUMMARY
+            bool "Use a second model call to summarize MCP result"
+            default n
+            depends on APP_AGENT_USE_OPENAI
+            help
+                Disabled by default to reduce API cost and latency.
+
+        config APP_AGENT_ALLOW_RULE_FALLBACK
+            bool "Allow deterministic local fallback"
+            default y
+
+        config APP_AGENT_TASK_QUEUE_LENGTH
+            int "Agent task queue length"
+            range 1 16
+            default 4
+
+        config APP_AGENT_TASK_STACK
+            int "Agent FreeRTOS task stack"
+            range 8192 24576
+            default 16384
+
+    endmenu
+
+    menu "Audio"
+
+        config APP_AUDIO_STARTUP_FILE
+            string "Startup WAV file"
+            default "/spiffs/audio/inicio.wav"
+
+        config APP_AUDIO_WELCOME_FILE
+            string "Welcome WAV file"
+            default "/spiffs/audio/bienvenida.wav"
+
+        config APP_AUDIO_DEFAULT_VOLUME
+            int "Default speaker volume"
+            range 0 100
+            default 65
+
+        config APP_PLAY_STARTUP_AUDIO
+            bool "Play inicio.wav after boot"
+            default y
+
+    endmenu
+
+    menu "Optional LAN MCP server"
+
+        config APP_ENABLE_HTTP_MCP
+            bool "Enable local HTTP /mcp endpoint"
+            default y
+
+        config APP_HTTP_MCP_PORT
+            int "HTTP MCP port"
+            range 1 65535
+            default 80
+            depends on APP_ENABLE_HTTP_MCP
+
+        config APP_HTTP_MCP_ENDPOINT
+            string "HTTP MCP endpoint without leading slash"
+            default "mcp"
+            depends on APP_ENABLE_HTTP_MCP
+
+    endmenu
+
+endmenu

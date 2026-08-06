@@ -1,0 +1,8 @@
+{
+  "task_id": "task-test-0001",
+  "goal": "Reproduce el audio de bienvenida",
+  "priority": "normal",
+  "context": {
+    "source": "aws_cli_test"
+  }
+}

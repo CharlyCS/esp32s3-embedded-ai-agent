@@ -1,0 +1,53 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ConnectUsingThingName",
+      "Effect": "Allow",
+      "Action": "iot:Connect",
+      "Resource": "arn:aws:iot:us-east-1:730335216238:client/${iot:Connection.Thing.ThingName}",
+      "Condition": {
+        "Bool": {
+          "iot:Connection.Thing.IsAttached": "true"
+        }
+      }
+    },
+    {
+      "Sid": "SubscribeToAgentTasks",
+      "Effect": "Allow",
+      "Action": "iot:Subscribe",
+      "Resource": "arn:aws:iot:us-east-1:730335216238:topicfilter/ai/agents/${iot:Connection.Thing.ThingName}/tasks",
+      "Condition": {
+        "Bool": {
+          "iot:Connection.Thing.IsAttached": "true"
+        }
+      }
+    },
+    {
+      "Sid": "ReceiveAgentTasks",
+      "Effect": "Allow",
+      "Action": "iot:Receive",
+      "Resource": "arn:aws:iot:us-east-1:730335216238:topic/ai/agents/${iot:Connection.Thing.ThingName}/tasks",
+      "Condition": {
+        "Bool": {
+          "iot:Connection.Thing.IsAttached": "true"
+        }
+      }
+    },
+    {
+      "Sid": "PublishAgentResultsAndState",
+      "Effect": "Allow",
+      "Action": "iot:Publish",
+      "Resource": [
+        "arn:aws:iot:us-east-1:730335216238:topic/ai/agents/${iot:Connection.Thing.ThingName}/results",
+        "arn:aws:iot:us-east-1:730335216238:topic/ai/agents/${iot:Connection.Thing.ThingName}/events",
+        "arn:aws:iot:us-east-1:730335216238:topic/ai/agents/${iot:Connection.Thing.ThingName}/status"
+      ],
+      "Condition": {
+        "Bool": {
+          "iot:Connection.Thing.IsAttached": "true"
+        }
+      }
+    }
+  ]
+}

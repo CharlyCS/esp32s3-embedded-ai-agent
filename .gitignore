@@ -1,0 +1,20 @@
+build/
+managed_components/
+dependencies.lock
+sdkconfig
+sdkconfig.old
+.vscode/
+.idea/
+*.bin
+*.elf
+*.map
+
+# AWS credentials: never commit them.
+aws/certs/*.pem
+aws/certs/*.crt
+aws/certs/*.key
+!aws/certs/README.md
+!aws/certs/.gitkeep
+
+# Local secrets/config
+.env
