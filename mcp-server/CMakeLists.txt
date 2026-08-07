@@ -11,6 +11,7 @@ idf_component_register(
         driver
         esp_codec_dev
         esp_http_server
+        esp_timer
         json
         mcp-c-sdk
         spiffs

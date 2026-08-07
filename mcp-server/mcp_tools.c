@@ -16,6 +16,8 @@
 #include "esp_mcp_resource.h"
 #include "esp_mcp_tool.h"
 #include "esp_timer.h"
+#include "esp_system.h"
+
 
 static const char *TAG = "mcp_tools";
 

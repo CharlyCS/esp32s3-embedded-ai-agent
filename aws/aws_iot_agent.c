@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "esp_log.h"
-#include "esp_mqtt_client.h"
+#include "mqtt_client.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "freertos/task.h"

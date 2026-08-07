@@ -144,8 +144,9 @@ esp_err_t mcp_server_start_http(void)
     if (err != ESP_OK) {
         return err;
     }
-
-    s_httpd_config = HTTPD_DEFAULT_CONFIG();
+    
+    httpd_config_t default_config = HTTPD_DEFAULT_CONFIG();
+    s_httpd_config = default_config;
     s_httpd_config.server_port = CONFIG_APP_HTTP_MCP_PORT;
     s_httpd_config.stack_size = 10240;
     s_httpd_config.max_uri_handlers = 16;
