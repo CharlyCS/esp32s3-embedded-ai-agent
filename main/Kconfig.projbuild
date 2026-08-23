@@ -4,11 +4,11 @@ menu "Embedded AI Agent configuration"
 
         config APP_WIFI_SSID
             string "Wi-Fi SSID"
-            default "CAMBIAR_WIFI"
+            default "Mateo's house 2.4 ghz"
 
         config APP_WIFI_PASSWORD
             string "Wi-Fi password"
-            default "CAMBIAR_PASSWORD"
+            default "Juventus1996"
 
         config APP_WIFI_MAXIMUM_RETRY
             int "Maximum Wi-Fi reconnection attempts"
@@ -21,11 +21,11 @@ menu "Embedded AI Agent configuration"
 
         config APP_AWS_IOT_ENDPOINT
             string "AWS IoT Device data endpoint, without mqtts://"
-            default "CAMBIAR-ats.iot.us-east-1.amazonaws.com"
+            default "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
 
         config APP_THING_NAME
             string "AWS IoT ThingName and MQTT Client ID"
-            default "CAMBIAR_THING_NAME"
+            default "embedded-agent-001"
 
         config APP_AWS_MAX_TASK_BYTES
             int "Maximum task JSON bytes"
@@ -56,7 +56,7 @@ menu "Embedded AI Agent configuration"
 
         config APP_AGENT_OPENAI_API_KEY
             string "OpenAI API key"
-            default "CAMBIAR_OPENAI_API_KEY"
+            default ""
             depends on APP_AGENT_USE_OPENAI
 
         config APP_AGENT_OPENAI_MODEL

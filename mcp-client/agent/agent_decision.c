@@ -41,10 +41,7 @@ void agent_decision_reset(agent_decision_t *decision)
     );
 }
 
-esp_err_t agent_decision_parse_json(
-    const char *json_text,
-    agent_decision_t *decision
-)
+esp_err_t agent_decision_parse_json(const char *json_text,agent_decision_t *decision)
 {
     if (json_text == NULL || decision == NULL) {
         return ESP_ERR_INVALID_ARG;

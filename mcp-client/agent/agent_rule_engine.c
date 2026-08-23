@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "esp_log.h"
+
+static const char *TAG = "agent_rule_engine";
 
 static void lowercase_ascii(
     const char *source,
@@ -90,6 +93,7 @@ esp_err_t agent_rule_engine_decide(
             sizeof(decision->reason),
             "El objetivo requiere ejecutar el audio local de bienvenida"
         );
+        ESP_LOGI(TAG, "Activacion de audio sin OPENAI");
         return ESP_OK;
     }
 

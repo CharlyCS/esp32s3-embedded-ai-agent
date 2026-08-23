@@ -14,17 +14,17 @@
 static const char *TAG = "aws_iot_agent";
 
 extern const uint8_t aws_root_ca_start[]
-    asm("_binary_certs_AmazonRootCA1_pem_start");
+    asm("_binary_AmazonRootCA1_pem_start");
 extern const uint8_t aws_root_ca_end[]
-    asm("_binary_certs_AmazonRootCA1_pem_end");
+    asm("_binary_AmazonRootCA1_pem_end");
 extern const uint8_t aws_device_certificate_start[]
-    asm("_binary_certs_device_certificate_pem_crt_start");
+    asm("_binary_device_certificate_pem_crt_start");
 extern const uint8_t aws_device_certificate_end[]
-    asm("_binary_certs_device_certificate_pem_crt_end");
+    asm("_binary_device_certificate_pem_crt_end");
 extern const uint8_t aws_device_private_key_start[]
-    asm("_binary_certs_device_private_pem_key_start");
+    asm("_binary_device_private_pem_key_start");
 extern const uint8_t aws_device_private_key_end[]
-    asm("_binary_certs_device_private_pem_key_end");
+    asm("_binary_device_private_pem_key_end");
 
 typedef struct {
     size_t len;
@@ -362,7 +362,7 @@ esp_err_t aws_iot_agent_init(aws_iot_task_handler_t task_handler)
     if (xTaskCreate(
             task_worker,
             "aws_task_worker",
-            8192,
+            16384,
             NULL,
             6,
             NULL

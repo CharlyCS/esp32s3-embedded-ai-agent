@@ -22,12 +22,7 @@ static const char *SYSTEM_PROMPT =
     "6. Si ya existe resultado MCP, genera type=final usando ese resultado. "
     "7. Tu respuesta debe estar en espanol.";
 
-static char *build_prompt(
-    const char *goal,
-    const char *context_json,
-    const char *available_tools_json,
-    const char *mcp_result_json
-)
+static char *build_prompt(const char *goal, const char *context_json, const char *available_tools_json, const char *mcp_result_json)
 {
     const char *context =
         context_json != NULL ? context_json : "{}";

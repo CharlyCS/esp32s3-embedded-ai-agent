@@ -19,6 +19,8 @@ static EventGroupHandle_t s_event_group;
 static int s_retry_count;
 static char s_ip_address[16] = "0.0.0.0";
 
+static int s_retry_num = 0;
+
 static void wifi_event_handler(
     void *argument,
     esp_event_base_t event_base,
@@ -33,16 +35,29 @@ static void wifi_event_handler(
         return;
     }
 
-    if (event_base == WIFI_EVENT &&
-        event_id == WIFI_EVENT_STA_DISCONNECTED) {
+    // ADDED
+    // if (event_base == WIFI_EVENT &&
+    //     event_id == WIFI_EVENT_STA_DISCONNECTED) {
+
+    //     wifi_event_sta_disconnected_t *event =
+    //         (wifi_event_sta_disconnected_t *) event_data;
+
+    //     ESP_LOGW(TAG,
+    //             "Wi-Fi desconectado. reason=%d, reintento %d/%d",
+    //             event->reason,
+    //             s_retry_num + 1,
+    //             CONFIG_APP_WIFI_MAXIMUM_RETRY);
+
+    //     if (s_retry_num < CONFIG_APP_WIFI_MAXIMUM_RETRY) {
+    //         esp_wifi_connect();
+    //         s_retry_num++;
+    //     }
+    // }
+
+    if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
         if (s_retry_count < CONFIG_APP_WIFI_MAXIMUM_RETRY) {
             s_retry_count++;
-            ESP_LOGW(
-                TAG,
-                "Wi-Fi desconectado; reintento %d/%d",
-                s_retry_count,
-                CONFIG_APP_WIFI_MAXIMUM_RETRY
-            );
+            ESP_LOGW( TAG, "Wi-Fi desconectado; reintento %d/%d", s_retry_count, CONFIG_APP_WIFI_MAXIMUM_RETRY);
             (void) esp_wifi_connect();
         } else {
             xEventGroupSetBits(s_event_group, WIFI_FAIL_BIT);
