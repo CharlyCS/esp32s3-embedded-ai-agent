@@ -51,11 +51,7 @@ static esp_err_t validate_response(const char *response_json)
     return result;
 }
 
-static esp_err_t send_raw_request(
-    const char *json,
-    bool expect_response,
-    char **out_response_json
-)
+static esp_err_t send_raw_request(const char *json,bool expect_response,char **out_response_json)
 {
     if (json == NULL || out_response_json == NULL) {
         return ESP_ERR_INVALID_ARG;
@@ -89,11 +85,7 @@ static esp_err_t send_raw_request(
     return ESP_OK;
 }
 
-static esp_err_t request_method(
-    const char *method,
-    cJSON *params,
-    char **out_response_json
-)
+static esp_err_t request_method(const char *method, cJSON *params,char **out_response_json)
 {
     if (method == NULL ||
         params == NULL ||
@@ -313,11 +305,7 @@ esp_err_t local_mcp_client_list_prompts(
     );
 }
 
-esp_err_t local_mcp_client_get_prompt(
-    const char *name,
-    const char *arguments_json,
-    char **out_response_json
-)
+esp_err_t local_mcp_client_get_prompt(const char *name,const char *arguments_json,char **out_response_json)
 {
     if (!s_initialized || name == NULL) {
         return ESP_ERR_INVALID_STATE;
