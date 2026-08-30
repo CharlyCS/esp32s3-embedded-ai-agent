@@ -1,4 +1,4 @@
-# ESP32-S3 Embedded AI Agent
+# ESP32-S3 Embedded AI Agent VERSION 01
 
 Proyecto ESP-IDF para **un único AWS IoT Thing** usando la
 **Waveshare ESP32-S3-AUDIO-Board**.
