@@ -1,155 +1,43 @@
-# ESP32-S3 Embedded AI Agent VERSION 01
+# ESP32-S3 MCP Server-only
 
-Proyecto ESP-IDF para **un único AWS IoT Thing** usando la
-**Waveshare ESP32-S3-AUDIO-Board**.
+Firmware ESP-IDF para exponer herramientas MCP del ESP32-S3 sin cliente MCP ni
+agente de IA embebido.
 
-## Flujo implementado
+## Transportes disponibles
 
-```text
-Supervisor
-  ↓ objetivo por AWS IoT Core
-Agent Runtime del ESP32
-  ↓
-MCP Client local
-  ↓
-MCP Server local
-  ↓
-Tool física
-  ↓
-MCP Client
-  ↓
-Agent Runtime
-  ↓ resultado listo por AWS IoT Core
-Supervisor
-```
+1. AWS IoT Core MQTT/TLS: recibe MCP JSON-RPC en
+   `ai/agents/{thing}/tasks` y responde en
+   `ai/agents/{thing}/results`.
+2. MCP HTTP directo en la LAN: endpoint `/mcp`, habilitable mediante
+   `CONFIG_APP_ENABLE_HTTP_MCP`.
 
-AWS IoT Core no transporta MCP en este diseño. Transporta las tareas de alto
-nivel y sus resultados. MCP funciona dentro del ESP32 entre el agente y las
-capacidades locales.
+Los dos transportes llegan al mismo conjunto de herramientas físicas. MQTT no
+se convierte en HTTP dentro del ESP32; son entradas independientes.
 
-## Carpetas solicitadas
+## Estructura relevante
 
-```text
-esp32_s3_embedded_ai_agent/
-├── aws/
-│   ├── certs/
-│   ├── policy/
-│   └── aws_iot_agent.c
-├── data/
-│   └── audio/
-├── scripts/
-├── mcp-server/
-├── mcp-client/
-│   └── agent/
-└── main/
-```
+- `main/`: arranque, Wi-Fi y enlace de AWS con el motor MCP.
+- `aws/`: conexión MQTT/TLS, topics y certificados del Thing.
+- `mcp-server/`: servidor, herramientas, audio y almacenamiento.
+- `data/`: archivos SPIFFS.
+- `scripts/`: utilidades de configuración y prueba.
 
-## Certificados
-
-El ZIP no incluye tus credenciales privadas. Instálalas con:
+## Configuración
 
 ```bash
-python scripts/install_certificates.py \
-  --root-ca "/ruta/AmazonRootCA1.pem" \
-  --certificate "/ruta/device-certificate.pem.crt" \
-  --private-key "/ruta/device-private.pem.key"
+idf.py set-target esp32s3
+idf.py menuconfig
 ```
 
-## Agente similar al ejemplo Python
+Configura Wi-Fi, endpoint AWS IoT, ThingName y el token Bearer de `/mcp`. Luego
+instala certificados propios en `aws/certs/` usando
+`scripts/install_certificates.py`.
 
-El código Python proporcionado usa:
-
-```text
-decide → tool_call/final → respuesta
+```bash
+idf.py build
+idf.py -p /dev/ttyACM0 flash monitor
 ```
 
-Este proyecto implementa:
-
-```text
-Agent Runtime
-├── consulta tools/list al MCP Server local;
-├── decide con OpenAI o fallback local;
-├── ejecuta tools/call mediante el MCP Client local;
-├── recibe el resultado MCP;
-└── publica la respuesta final por AWS.
-```
-
-No usa LangGraph porque el firmware es C/FreeRTOS, pero conserva la misma
-máquina de estados.
-
-## OpenAI opcional
-
-El agente puede usar `espressif/openai` con Chat Completions y
-`gpt-4o-mini`. Está desactivado por defecto para que puedas probar toda la
-arquitectura sin consumir API.
-
-Sin OpenAI, el fallback reconoce objetivos de:
-
-```text
-bienvenida
-audio inicial
-detener audio
-volumen
-estado/diagnóstico
-```
-
-## MCP completo en el ESP32
-
-El servidor usa `espressif/mcp-c-sdk 2.0.1` y registra:
-
-```text
-tools/list
-tools/call
-resources/list
-resources/read
-prompts/list
-prompts/get
-initialize
-ping
-```
-
-Las capacidades concretas son:
-
-```text
-self.get_device_status
-self.audio.play_startup
-self.audio.play_welcome
-self.audio.stop
-self.audio.set_volume
-device://status
-welcome.plan
-```
-
-## HTTP MCP opcional
-
-Se conserva:
-
-```text
-http://IP_DEL_ESP32/mcp
-```
-
-para diagnóstico o agentes de monitoreo dentro de la LAN.
-
-El agente embebido no usa HTTP. Su MCP Client se comunica en proceso con el
-MCP Server, evitando TCP, encabezados HTTP y latencia de red.
-
-## AWS configurado
-
-```text
-Account ID: 730335216238
-Region: us-east-1
-Thing Group: arch-embedded-agents
-Topic prefix: ai/agents
-```
-
-La política está en:
-
-```text
-aws/policy/ArchEmbeddedAgentsPolicy.json
-```
-
-## Inicio
-
-Sigue:
-
-[SETUP_STEP_BY_STEP.md](SETUP_STEP_BY_STEP.md)
+Consulta `ARCHITECTURE_SERVER_ONLY.md` para el flujo completo y usa el cliente
+de PC entregado por separado para ejecutar `initialize`, `tools/list` y
+`tools/call`.

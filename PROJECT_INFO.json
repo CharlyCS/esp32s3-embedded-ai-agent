@@ -1,13 +1,9 @@
 {
-  "project": "esp32_s3_embedded_ai_agent",
+  "project": "esp32_s3_mcp_server_only",
   "target": "esp32s3",
   "board": "Waveshare ESP32-S3-AUDIO-Board",
   "esp_idf": "5.5.1",
-  "aws_account_id": "730335216238",
-  "aws_region": "us-east-1",
-  "thing_group": "arch-embedded-agents",
   "topic_prefix": "ai/agents",
   "mcp_sdk": "2.0.1",
-  "openai_component": "1.1.0",
-  "architecture": "AWS task -> local agent -> local MCP client -> local MCP server -> physical tool -> AWS result"
+  "architecture": "PC MCP client -> AWS IoT MQTT/TLS -> ESP32 MCP server -> physical tool -> AWS IoT MQTT/TLS -> PC"
 }

@@ -107,7 +107,7 @@ static void publish_online_status(void)
         "{"
         "\"online\":true,"
         "\"thing_name\":\"%s\","
-        "\"agent_type\":\"embedded_ai_agent\","
+        "\"agent_type\":\"mcp_server\"," 
         "\"local_mcp\":true,"
         "\"http_mcp\":%s,"
         "\"topic_prefix\":\"ai/agents\""
@@ -145,7 +145,7 @@ static void task_worker(void *argument)
         );
 
         if (err != ESP_OK) {
-            ESP_LOGE(TAG, "El agente rechazo la tarea: %s",
+            ESP_LOGE(TAG, "El servidor MCP rechazo la solicitud: %s",
                      esp_err_to_name(err));
         }
     }

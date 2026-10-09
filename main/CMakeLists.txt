@@ -9,7 +9,6 @@ idf_component_register(
         esp_event
         esp_netif
         esp_wifi
-        mcp-client
         mcp-server
         nvs_flash
 )

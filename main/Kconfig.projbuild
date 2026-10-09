@@ -44,49 +44,6 @@ menu "Embedded AI Agent configuration"
 
     endmenu
 
-    menu "Local AI agent"
-
-        config APP_AGENT_USE_OPENAI
-            bool "Use OpenAI for local agent decisions"
-            default n
-            help
-                When enabled, the ESP32 sends the goal and tools/list result
-                to the configured model. The API key is embedded in the
-                firmware in this pilot implementation.
-
-        config APP_AGENT_OPENAI_API_KEY
-            string "OpenAI API key"
-            default ""
-            depends on APP_AGENT_USE_OPENAI
-
-        config APP_AGENT_OPENAI_MODEL
-            string "OpenAI model"
-            default "gpt-4o-mini"
-            depends on APP_AGENT_USE_OPENAI
-
-        config APP_AGENT_OPENAI_FINAL_SUMMARY
-            bool "Use a second model call to summarize MCP result"
-            default n
-            depends on APP_AGENT_USE_OPENAI
-            help
-                Disabled by default to reduce API cost and latency.
-
-        config APP_AGENT_ALLOW_RULE_FALLBACK
-            bool "Allow deterministic local fallback"
-            default y
-
-        config APP_AGENT_TASK_QUEUE_LENGTH
-            int "Agent task queue length"
-            range 1 16
-            default 4
-
-        config APP_AGENT_TASK_STACK
-            int "Agent FreeRTOS task stack"
-            range 8192 24576
-            default 16384
-
-    endmenu
-
     menu "Audio"
 
         config APP_AUDIO_STARTUP_FILE

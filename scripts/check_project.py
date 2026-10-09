@@ -30,7 +30,6 @@ def main() -> int:
     print("  - Wi-Fi SSID/password")
     print("  - AWS IoT endpoint")
     print("  - ThingName, igual al MQTT clientId")
-    print("  - OpenAI opcional")
     print("  - Bearer token del HTTP MCP local")
 
     return 1 if missing else 0
