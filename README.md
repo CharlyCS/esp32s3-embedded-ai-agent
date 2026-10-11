@@ -1,43 +1,47 @@
-# ESP32-S3 MCP Server-only
+# AI Agent + MCP Client + AWS IoT
 
-Firmware ESP-IDF para exponer herramientas MCP del ESP32-S3 sin cliente MCP ni
-agente de IA embebido.
+Este proyecto ejecuta en la computadora:
 
-## Transportes disponibles
+- el AI Agent con OpenAI y LangGraph;
+- el cliente MCP JSON-RPC;
+- el transporte MQTT/TLS hacia AWS IoT Core.
 
-1. AWS IoT Core MQTT/TLS: recibe MCP JSON-RPC en
-   `ai/agents/{thing}/tasks` y responde en
-   `ai/agents/{thing}/results`.
-2. MCP HTTP directo en la LAN: endpoint `/mcp`, habilitable mediante
-   `CONFIG_APP_ENABLE_HTTP_MCP`.
+El ESP32 contiene solamente el MCP Server.
 
-Los dos transportes llegan al mismo conjunto de herramientas físicas. MQTT no
-se convierte en HTTP dentro del ESP32; son entradas independientes.
+## Flujo
 
-## Estructura relevante
+`Usuario -> AI Agent -> MCP Client -> AWS IoT -> ESP32 MCP Server -> Tool`
 
-- `main/`: arranque, Wi-Fi y enlace de AWS con el motor MCP.
-- `aws/`: conexión MQTT/TLS, topics y certificados del Thing.
-- `mcp-server/`: servidor, herramientas, audio y almacenamiento.
-- `data/`: archivos SPIFFS.
-- `scripts/`: utilidades de configuración y prueba.
-
-## Configuración
+## Instalación
 
 ```bash
-idf.py set-target esp32s3
-idf.py menuconfig
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
 ```
 
-Configura Wi-Fi, endpoint AWS IoT, ThingName y el token Bearer de `/mcp`. Luego
-instala certificados propios en `aws/certs/` usando
-`scripts/install_certificates.py`.
+Edita `.env` con tu API key, endpoint AWS y rutas de certificados. Usa un
+certificado AWS IoT propio para la computadora; no reutilices la clave privada
+del ESP32.
+
+## Ejecución
 
 ```bash
-idf.py build
-idf.py -p /dev/ttyACM0 flash monitor
+python main.py
 ```
 
-Consulta `ARCHITECTURE_SERVER_ONLY.md` para el flujo completo y usa el cliente
-de PC entregado por separado para ejecutar `initialize`, `tools/list` y
-`tools/call`.
+Al iniciar, el cliente realiza `initialize`, envía
+`notifications/initialized`, obtiene `tools/list` y entrega esas herramientas
+al AI Agent. Cuando el modelo selecciona una herramienta, ejecuta `tools/call`
+y usa el resultado MCP para redactar la respuesta final.
+
+## Topics
+
+- Solicitudes: `ai/agents/{thing_name}/tasks`
+- Respuestas: `ai/agents/{thing_name}/results`
+
+Esta implementación transporta MCP sobre MQTT/TLS. No utiliza
+`streamable_http_client`, porque AWS IoT Core no convierte MQTT en Streamable
+HTTP. Para usar exactamente `streamable_http_client`, el cliente tendría que
+conectarse directamente a `/mcp` o a un gateway HTTPS intermedio.

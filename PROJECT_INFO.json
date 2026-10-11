@@ -1,9 +1,0 @@
-{
-  "project": "esp32_s3_mcp_server_only",
-  "target": "esp32s3",
-  "board": "Waveshare ESP32-S3-AUDIO-Board",
-  "esp_idf": "5.5.1",
-  "topic_prefix": "ai/agents",
-  "mcp_sdk": "2.0.1",
-  "architecture": "PC MCP client -> AWS IoT MQTT/TLS -> ESP32 MCP server -> physical tool -> AWS IoT MQTT/TLS -> PC"
-}
