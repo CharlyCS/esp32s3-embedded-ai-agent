@@ -1,0 +1,6 @@
+AWS_IOT_CLIENT_ID: 
+  - CERT_CLIENT_NAME: "embedded-agent-002"
+    AWS_IOT_ENDPOINT: "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
+    AWS_IOT_CERTIFICATE: "certs/agent-002/pc-certificate.pem.crt"
+    AWS_IOT_PRIVATE_KEY: "certs/agent-002/pc-private.pem.key"
+    AWS_IOT_ROOT_CA: "certs/agent-002/AmazonRootCA1.pem"

@@ -1,0 +1,26 @@
+AWS_IOT_CLIENT_ID: 
+  - CERT_CLIENT_NAME: "embedded-agent-002"
+    AWS_IOT_ENDPOINT: "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
+    AWS_IOT_CERTIFICATE: "certs/agent-002/pc-certificate.pem.crt"
+    AWS_IOT_PRIVATE_KEY: "certs/agent-002/pc-private.pem.key"
+    AWS_IOT_ROOT_CA: "certs/agent-002/AmazonRootCA1.pem"
+
+EMBODIED_AGENTS:
+  - AWS_IOT_THING_NAME: "embedded-agent-001"
+    AWS_IOT_ENDPOINT: "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
+    AWS_IOT_CERTIFICATE: "certs/agent-001/pc-certificate.pem.crt"
+    AWS_IOT_PRIVATE_KEY: "certs/agent-001/pc-private.pem.key"
+    AWS_IOT_ROOT_CA: "certs/agent-001/AmazonRootCA1.pem"
+
+  - AWS_IOT_THING_NAME: "embedded-agent-003"
+    AWS_IOT_ENDPOINT: "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
+    AWS_IOT_CERTIFICATE: "certs/agent-003/pc-certificate.pem.crt"
+    AWS_IOT_PRIVATE_KEY: "certs/agent-003/pc-private.pem.key"
+    AWS_IOT_ROOT_CA: "certs/agent-003/AmazonRootCA1.pem"
+
+
+  - AWS_IOT_THING_NAME: "embedded-agent-004"
+    AWS_IOT_ENDPOINT: "am2xbtx8356wj-ats.iot.us-east-1.amazonaws.com"
+    AWS_IOT_CERTIFICATE: "certs/agent-004/pc-certificate.pem.crt"
+    AWS_IOT_PRIVATE_KEY: "certs/agent-004/pc-private.pem.key"
+    AWS_IOT_ROOT_CA: "certs/agent-004/AmazonRootCA1.pem"

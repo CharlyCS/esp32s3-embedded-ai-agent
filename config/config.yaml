@@ -1,0 +1,22 @@
+AWS_IOT_CLIENT_ID: "embedded-agent-002"
+EMBODIED_AGENTS:
+  - AWS_IOT_THING_NAME: "embedded-agent-001"
+    COUNTRY: "PERU"
+    LOCATION: "LIMA"
+    DISTRICT: "SURCO"
+    PLACE: "OFICINA"
+    TOOL: "sensor de luz"
+
+  - AWS_IOT_THING_NAME: "embedded-agent-003"
+    COUNTRY: "PERU"
+    LOCATION: "LIMA"
+    DISTRICT: "MIRAFLORES"
+    PLACE: "OFICINA"
+    TOOL: "audio de bienvenida"
+
+  - AWS_IOT_THING_NAME: "embedded-agent-004"
+    COUNTRY: "ARGENTINA"
+    LOCATION: "BUENOS AIRES"
+    DISTRICT: "RIVADAVIA"
+    PLACE: "LABORATORIO"
+    TOOL: "sensor"

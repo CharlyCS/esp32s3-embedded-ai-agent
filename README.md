@@ -1,155 +1,49 @@
-# ESP32-S3 Embedded AI Agent
+# AI Agent + MCP Client + AWS IoT
 
-Proyecto ESP-IDF para **un único AWS IoT Thing** usando la
-**Waveshare ESP32-S3-AUDIO-Board**.
+Este proyecto ejecuta en la computadora:
 
-## Flujo implementado
+- el AI Agent con OpenAI y LangGraph;
+- el cliente MCP JSON-RPC;
+- el transporte MQTT/TLS hacia AWS IoT Core.
 
-```text
-Supervisor
-  ↓ objetivo por AWS IoT Core
-Agent Runtime del ESP32
-  ↓
-MCP Client local
-  ↓
-MCP Server local
-  ↓
-Tool física
-  ↓
-MCP Client
-  ↓
-Agent Runtime
-  ↓ resultado listo por AWS IoT Core
-Supervisor
-```
+El ESP32 contiene solamente el MCP Server.
 
-AWS IoT Core no transporta MCP en este diseño. Transporta las tareas de alto
-nivel y sus resultados. MCP funciona dentro del ESP32 entre el agente y las
-capacidades locales.
+## Flujo
 
-## Carpetas solicitadas
+`Usuario -> AI Agent -> MCP Client -> AWS IoT -> ESP32 MCP Server -> Tool`
 
-```text
-esp32_s3_embedded_ai_agent/
-├── aws/
-│   ├── certs/
-│   ├── policy/
-│   └── aws_iot_agent.c
-├── data/
-│   └── audio/
-├── scripts/
-├── mcp-server/
-├── mcp-client/
-│   └── agent/
-└── main/
-```
-
-## Certificados
-
-El ZIP no incluye tus credenciales privadas. Instálalas con:
+## Instalación
 
 ```bash
-python scripts/install_certificates.py \
-  --root-ca "/ruta/AmazonRootCA1.pem" \
-  --certificate "/ruta/device-certificate.pem.crt" \
-  --private-key "/ruta/device-private.pem.key"
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
 ```
 
-## Agente similar al ejemplo Python
+Edita `.env` con tu API key, endpoint AWS y rutas de certificados. Usa un
+certificado AWS IoT propio para la computadora; no reutilices la clave privada
+del ESP32.
 
-El código Python proporcionado usa:
+## Ejecución
 
-```text
-decide → tool_call/final → respuesta
+```bash
+python main.py
 ```
 
-Este proyecto implementa:
+Al iniciar, el cliente realiza `initialize`, envía
+`notifications/initialized`, obtiene `tools/list` y entrega esas herramientas
+al AI Agent. Cuando el modelo selecciona una herramienta, ejecuta `tools/call`
+y usa el resultado MCP para redactar la respuesta final.
 
-```text
-Agent Runtime
-├── consulta tools/list al MCP Server local;
-├── decide con OpenAI o fallback local;
-├── ejecuta tools/call mediante el MCP Client local;
-├── recibe el resultado MCP;
-└── publica la respuesta final por AWS.
-```
+## Topics
 
-No usa LangGraph porque el firmware es C/FreeRTOS, pero conserva la misma
-máquina de estados.
+- Solicitudes: `ai/agents/{thing_name}/tasks`
+- Respuestas: `ai/agents/{thing_name}/results`
 
-## OpenAI opcional
+Esta implementación transporta MCP sobre MQTT/TLS. No utiliza
+`streamable_http_client`, porque AWS IoT Core no convierte MQTT en Streamable
+HTTP. Para usar exactamente `streamable_http_client`, el cliente tendría que
+conectarse directamente a `/mcp` o a un gateway HTTPS intermedio.
 
-El agente puede usar `espressif/openai` con Chat Completions y
-`gpt-4o-mini`. Está desactivado por defecto para que puedas probar toda la
-arquitectura sin consumir API.
-
-Sin OpenAI, el fallback reconoce objetivos de:
-
-```text
-bienvenida
-audio inicial
-detener audio
-volumen
-estado/diagnóstico
-```
-
-## MCP completo en el ESP32
-
-El servidor usa `espressif/mcp-c-sdk 2.0.1` y registra:
-
-```text
-tools/list
-tools/call
-resources/list
-resources/read
-prompts/list
-prompts/get
-initialize
-ping
-```
-
-Las capacidades concretas son:
-
-```text
-self.get_device_status
-self.audio.play_startup
-self.audio.play_welcome
-self.audio.stop
-self.audio.set_volume
-device://status
-welcome.plan
-```
-
-## HTTP MCP opcional
-
-Se conserva:
-
-```text
-http://IP_DEL_ESP32/mcp
-```
-
-para diagnóstico o agentes de monitoreo dentro de la LAN.
-
-El agente embebido no usa HTTP. Su MCP Client se comunica en proceso con el
-MCP Server, evitando TCP, encabezados HTTP y latencia de red.
-
-## AWS configurado
-
-```text
-Account ID: 730335216238
-Region: us-east-1
-Thing Group: arch-embedded-agents
-Topic prefix: ai/agents
-```
-
-La política está en:
-
-```text
-aws/policy/ArchEmbeddedAgentsPolicy.json
-```
-
-## Inicio
-
-Sigue:
-
-[SETUP_STEP_BY_STEP.md](SETUP_STEP_BY_STEP.md)
+## Avances
